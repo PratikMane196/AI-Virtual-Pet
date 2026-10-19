@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Virtual Pet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e8f5ff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            max-width: 420px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px #b8cddd;
+        }
+
+        #pet {
+            font-size: 100px;
+            margin: 10px;
+        }
+
+        #mood {
+            color: #167d65;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 10px;
+            background: #5b8def;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3268c7;
+        }
+
+        input {
+            padding: 10px;
+            width: 65%;
+            border: 1px solid #aaa;
+            border-radius: 8px;
+        }
+
+        #chat {
+            background: #f0f7ff;
+            padding: 12px;
+            border-radius: 10px;
+            min-height: 45px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🐾 AI Virtual Pet</h1>
+    <h2>Meet Buddy!</h2>
+
+    <div id="pet">🐶</div>
+
+    <p id="mood">Mood: Happy 😊</p>
+    <p id="stats">Hunger: 30 | Happiness: 70</p>
+
+    <button onclick="feedPet()">🍎 Feed</button>
+    <button onclick="playPet()">⚽ Play</button>
+    <button onclick="sleepPet()">😴 Sleep</button>
+
+    <h3>Chat with Buddy</h3>
+
+    <div id="chat">
+        Buddy: Hi friend! Let's have fun! 🐾
+    </div>
+
+    <input id="message"
+           type="text"
+           placeholder="Talk to Buddy...">
+
+    <button onclick="chatPet()">Send</button>
+</div>
+
+<script>
+    let hunger = 30;
+    let happiness = 70;
+    let mood = "Happy";
+
+    function updatePet() {
+        let emoji = "🐶";
+
+        if (hunger >= 70) {
+            mood = "Hungry";
+            emoji = "🥺";
+        } else if (happiness <= 25) {
+            mood = "Sad";
+            emoji = "😢";
+        } else if (happiness >= 85) {
+            mood = "Excited";
+            emoji = "🤩";
+        } else {
+            mood = "Happy";
+        }
+
+        document.getElementById("pet").innerText = emoji;
+        document.getElementById("mood").innerText =
+            "Mood: " + mood;
+
+        document.getElementById("stats").innerText =
+            "Hunger: " + hunger +
+            " | Happiness: " + happiness;
+    }
+
+    function feedPet() {
+        hunger = Math.max(0, hunger - 25);
+        happiness = Math.min(100, happiness + 10);
+
+        updatePet();
+
+        document.getElementById("chat").innerText =
+            "Buddy: Yum! Thank you for feeding me! 🦴";
+    }
+
+    function playPet() {
+        if (hunger >= 85) {
+            document.getElementById("chat").innerText =
+                "Buddy: I'm too hungry to play. Please feed me!";
+            updatePet();
+            return;
+        }
+
+        hunger = Math.min(100, hunger + 10);
+        happiness = Math.min(100, happiness + 20);
+
+        updatePet();
+
+        document.getElementById("chat").innerText =
+            "Buddy: Wheee! Playing with you is fun! ⚽";
+    }
+
+    function sleepPet() {
+        hunger = Math.min(100, hunger + 5);
+        happiness = Math.min(100, happiness + 5);
+
+        updatePet();
+
+        document.getElementById("chat").innerText =
+            "Buddy: Zzz... I feel rested now! 😴";
+    }
+
+    function chatPet() {
+        let message = document.getElementById("message")
+            .value.toLowerCase().trim();
+
+        if (message === "") {
+            return;
+        }
+
+        let reply = "";
+
+        // Context-aware virtual pet response rules
+        if (message.includes("hello") ||
+            message.includes("hi")) {
+            reply = "Hello friend! I'm happy to see you!";
+        } else if (message.includes("hungry") ||
+                   message.includes("food")) {
+            reply = hunger >= 50
+                ? "Yes please! Can you feed me?"
+                : "I'm not very hungry right now!";
+        } else if (message.includes("play") ||
+                   message.includes("game")) {
+            reply = happiness < 40
+                ? "I'm feeling sad. Let's play together!"
+                : "Yes! Let's play a fun game!";
+        } else if (message.includes("sad") ||
+                   message.includes("happy")) {
+            reply = happiness < 40
+                ? "I'm a little sad. Your company helps!"
+                : "I'm feeling " + mood.toLowerCase() +
+                  "! Thank you for asking!";
+        } else if (message.includes("name")) {
+            reply = "My name is Buddy. What's your name?";
+        } else if (message.includes("love")) {
+            reply = "Aww! I love spending time with you!";
+        } else {
+            reply = "I'm your friendly pet! Talk to me, " +
+                    "feed me, or let's play together!";
+        }
+
+        document.getElementById("chat").innerText =
+            "You: " + message + "\nBuddy: " + reply;
+
+        document.getElementById("message").value = "";
+    }
+
+    updatePet();
+</script>
+
+</body>
+</html>
